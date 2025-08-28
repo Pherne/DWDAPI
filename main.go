@@ -20,15 +20,23 @@ func fetchKMZ() ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer resp.Body.Close()
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
+			log.Printf("error closing response body: %v", err)
+		}
+	}(resp.Body)
 
 	tmpFile := "mosmix.kmz"
-	out, err := os.Create(tmpFile)
-	if err != nil {
-		return nil, err
+	out, createErr := os.Create(tmpFile)
+	if createErr != nil {
+		return nil, createErr
 	}
 	_, err = io.Copy(out, resp.Body)
-	out.Close()
+	closeErr := out.Close()
+	if closeErr != nil {
+		return nil, closeErr
+	}
 	if err != nil {
 		return nil, err
 	}
@@ -40,13 +48,28 @@ func fetchKMZ() ([]byte, error) {
 		return nil, err
 	}
 
-	defer os.Remove(tmpFile)
-	defer r.Close()
+	defer func(name string) {
+		err := os.Remove(name)
+		if err != nil {
+			log.Printf("error removing file: %v", err)
+		}
+	}(tmpFile)
+	defer func(r *zip.ReadCloser) {
+		err := r.Close()
+		if err != nil {
+			log.Printf("error closing zip file: %v", err)
+		}
+	}(r)
 
 	for _, f := range r.File {
 		if strings.HasSuffix(f.Name, ".kml") {
 			rc, _ := f.Open()
-			defer rc.Close()
+			defer func(rc io.ReadCloser) {
+				err := rc.Close()
+				if err != nil {
+					log.Printf("error closing file: %v", err)
+				}
+			}(rc)
 			data, _ := io.ReadAll(rc)
 			return data, nil
 		}
@@ -64,7 +87,12 @@ func main() {
 			log.Printf("Error while downloading: %v", err)
 			return c.Status(500).JSON(fiber.Map{"error": err.Error()})
 		}
-		defer os.Remove("mosmix.kmz")
+		defer func() {
+			err := os.Remove("mosmix.kmz")
+			if err != nil {
+
+			}
+		}()
 		log.Printf("Downloaded data length: %d", len(data))
 
 		forecasts, err := ParseKML(data)
