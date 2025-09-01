@@ -95,6 +95,16 @@ func ParseKML(data []byte) (*WeatherData, error) {
 				}
 			case "FF":
 				elem.WindSpeed = val
+			case "Rh00":
+				if value != "-" {
+					pChance := int(val)
+					elem.PreciChance = &pChance
+				}
+			case "RR1c":
+				// unit is mm
+				elem.PreciAmount = val
+			case "RRS1c":
+				elem.SnowChance = val
 			}
 		}
 	}

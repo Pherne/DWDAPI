@@ -52,4 +52,7 @@ type ForecastElement struct {
 	MaxTemp       *float64 `json:"maxTemperatureCelsius,omitempty"`
 	WindDirection string   `json:"windDirection"`
 	WindSpeed     float64  `json:"windSpeed"`
+	PreciChance   *int     `json:"precipitationChance,omitempty"`
+	PreciAmount   float64  `json:"precipitationAmount"`
+	SnowChance    float64  `json:"snowChance"`
 }
