@@ -55,7 +55,7 @@ func ParseKML(data []byte) (*WeatherData, error) {
 			var val float64
 			_, err := fmt.Sscanf(value, "%f", &val)
 			if err != nil {
-				log.Printf("Fehler beim Parsen von %s: %v", value, err)
+				log.Printf("Error parsing %s: %v", value, err)
 				return nil, err
 			}
 
