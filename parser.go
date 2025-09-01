@@ -53,10 +53,13 @@ func ParseKML(data []byte) (*WeatherData, error) {
 			}
 
 			var val float64
-			_, err := fmt.Sscanf(value, "%f", &val)
-			if err != nil {
-				log.Printf("Error parsing %s: %v", value, err)
-				return nil, err
+			_, scanErr := fmt.Sscanf(value, "%f", &val)
+			if scanErr != nil {
+				if value == "-" {
+					continue
+				}
+				log.Printf("Error parsing %s: %v in %s", value, scanErr, forecast.ElementName)
+				continue
 			}
 
 			switch forecast.ElementName {
