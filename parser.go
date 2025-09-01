@@ -70,7 +70,7 @@ func ParseKML(data []byte) (*WeatherData, error) {
 					minTempC := val - 273.15
 					elem.MinTemp = &minTempC
 				}
-			case "TM":
+			case "TX":
 				if value != "-" {
 					maxTempC := val - 273.15
 					elem.MaxTemp = &maxTempC
