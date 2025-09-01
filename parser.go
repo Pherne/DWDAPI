@@ -75,6 +75,9 @@ func ParseKML(data []byte) (*WeatherData, error) {
 					maxTempC := val - 273.15
 					elem.MaxTemp = &maxTempC
 				}
+			case "PPPP":
+				elem.Pressure = val
+
 			case "DD":
 				if val > 340 || val <= 20 {
 					elem.WindDirection = "N"
@@ -105,7 +108,10 @@ func ParseKML(data []byte) (*WeatherData, error) {
 				elem.PreciAmount = val
 			case "RRS1c":
 				elem.SnowChance = val
+			case "wwM":
+				elem.FogChance = val
 			}
+
 		}
 	}
 

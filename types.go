@@ -50,9 +50,11 @@ type ForecastElement struct {
 	Temp          float64  `json:"temperatureCelsius"`
 	MinTemp       *float64 `json:"minTemperatureCelsius,omitempty"`
 	MaxTemp       *float64 `json:"maxTemperatureCelsius,omitempty"`
+	Pressure      float64  `json:"pressure"`
 	WindDirection string   `json:"windDirection"`
 	WindSpeed     float64  `json:"windSpeed"`
 	PreciChance   *int     `json:"precipitationChance,omitempty"`
 	PreciAmount   float64  `json:"precipitationAmount"`
 	SnowChance    float64  `json:"snowChance"`
+	FogChance     float64  `json:"fogChance"`
 }
