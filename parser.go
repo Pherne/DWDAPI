@@ -62,6 +62,7 @@ func ParseKML(data []byte) (*WeatherData, error) {
 				continue
 			}
 
+			// explaination for each parameter: https://dwd-geoportal.de/products/G_FJM/
 			switch forecast.ElementName {
 			case "TTT":
 				elem.Temp = val - 273.15
